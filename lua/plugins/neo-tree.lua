@@ -6,6 +6,51 @@ return {
 		"nvim-tree/nvim-web-devicons", -- not strictly required, but recommended
 		"MunifTanjim/nui.nvim",
 		-- {"3rd/image.nvim", opts = {}}, -- Optional image support in preview window: See `# Preview Mode` for more information
+		{
+			"s1n7ax/nvim-window-picker", -- for open_with_window_picker keymaps
+			version = "2.*",
+			event = "VeryLazy",
+			keys = function(_, keys)
+				local pick_window = function()
+					local picked_window_id = require("window-picker").pick_window()
+					if picked_window_id ~= nil then
+						vim.api.nvim_set_current_win(picked_window_id)
+					end
+				end
+
+				local swap_window = function()
+					local picked_window_id = require("window-picker").pick_window()
+					if picked_window_id ~= nil then
+						local current_winnr = vim.api.nvim_get_current_win()
+						local current_bufnr = vim.api.nvim_get_current_buf()
+						local other_bufnr = vim.api.nvim_win_get_buf(picked_window_id)
+						vim.api.nvim_win_set_buf(current_winnr, other_bufnr)
+						vim.api.nvim_win_set_buf(picked_window_id, current_bufnr)
+					end
+				end
+
+				local mappings = {
+					{ "sp", pick_window, desc = "Pick window" },
+					{ "sw", swap_window, desc = "Swap picked window" },
+				}
+				return vim.list_extend(mappings, keys)
+			end,
+			config = function()
+				require("window-picker").setup({
+					filter_rules = {
+						include_current_win = false,
+						autoselect_one = true,
+						-- filter using buffer options
+						bo = {
+							-- if the file type is one of following, the window will be ignored
+							filetype = { "neo-tree", "neo-tree-popup", "notify" },
+							-- if the buffer type is one of following, the window will be ignored
+							buftype = { "terminal", "quickfix" },
+						},
+					},
+				})
+			end,
+		},
 	},
 	lazy = false, -- neo-tree will lazily load itself
 	---@module "neo-tree"

@@ -10,3 +10,5 @@ vim.opt.shiftwidth = 4
 vim.opt.expandtab = true
 vim.opt.smartindent = true
 vim.opt.swapfile = false
+vim.opt.termguicolors = true
+vim.opt.mouse = "nv" -- Enable mouse in normal and visual modes only
