@@ -58,8 +58,7 @@ return {
 	opts = {
 		enable_git_status = true,
 		keys = {
-			{ "<localleader>e", "<leader>fe", desc = "Explorer Tree (Root Dir)", remap = true },
-			{ "<localleader>E", "<leader>fE", desc = "Explorer Tree (cwd)", remap = true },
+			{ "<localleader>e", desc = "Explorer Tree (cwd)", remap = true },
 			{
 				"<localleader>a",
 				function()
@@ -433,6 +432,6 @@ return {
 			},
 		})
 
-		vim.keymap.set("n", "<leader>e", "<Cmd>Neotree reveal<CR>")
+		vim.keymap.set("n", "<leader>e", "<Cmd>Neotree toggle<CR>")
 	end,
 }
