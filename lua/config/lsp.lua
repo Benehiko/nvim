@@ -15,6 +15,15 @@ local on_attach = function(_, bufnr)
 	map("n", "gi", vim.lsp.buf.implementation)
 	map("n", "<leader>rn", vim.lsp.buf.rename)
 	map("n", "<leader>ca", vim.lsp.buf.code_action)
+
+	map("n", "<leader>ld", function()
+		vim.diagnostic.open_float({ scope = "line" })
+	end)
+
+	map("n", "<leader>lD", function()
+		vim.diagnostic.setloclist()
+		vim.cmd("lopen")
+	end)
 end
 
 local lsp_servers = {
