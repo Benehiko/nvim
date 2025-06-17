@@ -38,29 +38,44 @@ local lsp_servers = {
 }
 
 mason_lspconfig.setup({
+	automatic_enable = true,
 	ensure_installed = lsp_servers,
 })
 
-for _, server in ipairs(lsp_servers) do
-	lspconfig[server].setup({
-		capabilities = capabilities,
-		on_attach = on_attach,
-	})
-end
-
--- Optional: special case for lua_ls
-lspconfig.lua_ls.setup({
-	capabilities = capabilities,
-	on_attach = on_attach,
-	settings = {
-		Lua = {
-			diagnostics = {
-				globals = { "vim" }, -- Stop warnings about "vim" being undefined
-			},
-			workspace = {
-				checkThirdParty = false,
-				library = vim.api.nvim_get_runtime_file("", true),
+local server_opts = {
+	gopls = {
+		settings = {
+			gopls = {
+				buildFlags = { "-tags=cgo" },
+				staticcheck = true,
+				analyses = { unusedparams = true },
 			},
 		},
 	},
-})
+	lua_ls = {
+		settings = {
+			Lua = {
+				diagnostics = {
+					globals = { "vim" }, -- Stop warnings about "vim" being undefined
+				},
+				workspace = {
+					checkThirdParty = false,
+					library = vim.api.nvim_get_runtime_file("", true),
+				},
+			},
+		},
+	},
+}
+
+for _, server in ipairs(lsp_servers) do
+	local opts = {
+		capabilities = capabilities,
+		on_attach = on_attach,
+	}
+
+	if server_opts[server] then
+		opts = vim.tbl_deep_extend("force", opts, server_opts[server])
+	end
+
+	lspconfig[server].setup(opts)
+end
