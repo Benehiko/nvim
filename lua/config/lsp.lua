@@ -19,12 +19,6 @@ local on_attach = function(_, bufnr)
 	map("n", "[e", "<cmd>Lspsaga diagnostic_jump_prev<CR>")
 	map("n", "]e", "<cmd>Lspsaga diagnostic_jump_next<CR>")
 	map("n", "K", "<cmd>Lspsaga hover_doc<CR>")
-
-	-- Toggle document diagnostics
-	map("n", "<leader>ld", "<cmd>TroubleToggle document_diagnostics<CR>")
-
-	-- Toggle workspace diagnostics
-	map("n", "<leader>lD", "<cmd>TroubleToggle workspace_diagnostics<CR>")
 end
 
 local lsp_servers = {

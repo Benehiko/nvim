@@ -1,10 +1,28 @@
 return {
 	{
 		"folke/trouble.nvim",
+		dependencies = {
+			"nvim-tree/nvim-web-devicons",
+		},
 		config = function()
 			require("trouble").setup({
-				icons = false,
+				auto_preview = true,
+				auto_close = false,
+				auto_jump = {},
+				focus = true,
+				win = {
+					position = "bottom",
+					height = 12,
+				},
 			})
+
+			vim.keymap.set("n", "<leader>ld", function()
+				require("trouble").toggle({ mode = "diagnostics", filter = { buf = 0 } })
+			end)
+
+			vim.keymap.set("n", "<leader>lD", function()
+				require("trouble").toggle({ mode = "diagnostics" })
+			end)
 
 			vim.keymap.set("n", "<leader>tt", function()
 				require("trouble").toggle()
