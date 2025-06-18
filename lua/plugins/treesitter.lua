@@ -27,6 +27,9 @@ return {
 				indent = {
 					enable = true,
 				},
+				fold = {
+					enable = true,
+				},
 
 				highlight = {
 					-- `false` will disable the whole extension

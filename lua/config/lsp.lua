@@ -10,20 +10,21 @@ local on_attach = function(_, bufnr)
 		vim.keymap.set(mode, lhs, rhs, { noremap = true, silent = true, buffer = bufnr })
 	end
 
-	map("n", "gd", vim.lsp.buf.definition)
-	map("n", "K", vim.lsp.buf.hover)
-	map("n", "gi", vim.lsp.buf.implementation)
-	map("n", "<leader>rn", vim.lsp.buf.rename)
-	map("n", "<leader>ca", vim.lsp.buf.code_action)
+	map("n", "gi", "<cmd>Lspsaga goto_implementation<CR>")
+	map("n", "gd", "<cmd>Lspsaga peek_definition<CR>")
+	map("n", "gD", "<cmd>Lspsaga goto_definition<CR>")
+	map("n", "gr", "<cmd>Lspsaga finder<CR>")
+	map("n", "<leader>ca", "<cmd>Lspsaga code_action<CR>")
+	map("n", "<leader>rn", "<cmd>Lspsaga rename<CR>")
+	map("n", "[e", "<cmd>Lspsaga diagnostic_jump_prev<CR>")
+	map("n", "]e", "<cmd>Lspsaga diagnostic_jump_next<CR>")
+	map("n", "K", "<cmd>Lspsaga hover_doc<CR>")
 
-	map("n", "<leader>ld", function()
-		vim.diagnostic.open_float({ scope = "line" })
-	end)
+	-- Toggle document diagnostics
+	map("n", "<leader>ld", "<cmd>TroubleToggle document_diagnostics<CR>")
 
-	map("n", "<leader>lD", function()
-		vim.diagnostic.setloclist()
-		vim.cmd("lopen")
-	end)
+	-- Toggle workspace diagnostics
+	map("n", "<leader>lD", "<cmd>TroubleToggle workspace_diagnostics<CR>")
 end
 
 local lsp_servers = {
@@ -38,7 +39,7 @@ local lsp_servers = {
 }
 
 mason_lspconfig.setup({
-	automatic_enable = true,
+	automatic_enable = false,
 	ensure_installed = lsp_servers,
 })
 

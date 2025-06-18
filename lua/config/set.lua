@@ -1,5 +1,5 @@
 vim.opt.wrap = false
-vim.opt.signcolumn = "yes"
+vim.opt.signcolumn = "yes:2"
 vim.opt.colorcolumn = "80"
 vim.opt.updatetime = 50
 vim.opt.nu = true
