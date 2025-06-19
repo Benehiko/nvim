@@ -12,3 +12,21 @@ vim.opt.smartindent = true
 vim.opt.swapfile = false
 vim.opt.termguicolors = true
 vim.opt.mouse = "nv" -- Enable mouse in normal and visual modes only
+
+vim.api.nvim_create_autocmd("BufEnter", {
+	callback = function()
+		local bufnr = vim.api.nvim_get_current_buf()
+		local winid = vim.api.nvim_get_current_win()
+
+		-- Detect floating window
+		local ok, config = pcall(vim.api.nvim_win_get_config, winid)
+		if ok and config.relative ~= "" then
+			-- Set <Esc> to close this floating window
+			vim.keymap.set("n", "<Esc>", function()
+				if vim.api.nvim_win_is_valid(winid) then
+					vim.api.nvim_win_close(winid, true)
+				end
+			end, { buffer = bufnr, silent = true })
+		end
+	end,
+})
