@@ -37,8 +37,15 @@ mason_lspconfig.setup({
 	ensure_installed = lsp_servers,
 })
 
+local goenv_root = vim.env.GOENV_ROOT or (vim.env.HOME .. "/.goenv")
+local shim_path = goenv_root .. "/shims"
+
 local server_opts = {
 	gopls = {
+		cmd = { vim.fn.expand("~/go/bin/gopls") },
+		cmd_env = {
+			PATH = shim_path .. ":" .. vim.env.PATH,
+		},
 		settings = {
 			gopls = {
 				buildFlags = { "-tags=cgo" },
