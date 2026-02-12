@@ -41,6 +41,10 @@ vim.g.mapleader = " "
 vim.g.maplocalleader = "\\"
 
 require("lazy").setup({
+	rocks = {
+		enabled = false,
+	},
+	git = { filter = false },
 	spec = {
 		-- import your plugins
 		{ import = "plugins" },

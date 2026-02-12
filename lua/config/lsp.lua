@@ -1,4 +1,3 @@
-local lspconfig = require("lspconfig")
 local mason_lspconfig = require("mason-lspconfig")
 local cmp_nvim_lsp = require("cmp_nvim_lsp")
 
@@ -42,7 +41,7 @@ local shim_path = goenv_root .. "/shims"
 
 local server_opts = {
 	gopls = {
-		cmd = { vim.fn.expand("~/go/bin/gopls") },
+		cmd = { vim.fn.expand("~/.goenv/shims/gopls") },
 		cmd_env = {
 			PATH = shim_path .. ":" .. vim.env.PATH,
 		},
@@ -79,5 +78,6 @@ for _, server in ipairs(lsp_servers) do
 		opts = vim.tbl_deep_extend("force", opts, server_opts[server])
 	end
 
-	lspconfig[server].setup(opts)
+	vim.lsp.config(server, opts)
+	vim.lsp.enable(server)
 end
