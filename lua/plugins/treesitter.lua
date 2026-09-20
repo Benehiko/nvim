@@ -2,46 +2,46 @@ return {
 	{
 		"nvim-treesitter/nvim-treesitter",
 		lazy = false, -- main branch: plugin does not support lazy-loading
-		build = ":TSUpdate",
+		build = function()
+			-- Rebuild/update installed parsers after plugin updates.
+			-- Needs the tree-sitter CLI (installed at ~/tools/tree-sitter);
+			-- skip with a notice instead of failing hard when it's missing.
+			local cli = vim.fn.exepath("tree-sitter")
+			if cli == "" then
+				local known = vim.fn.expand("~/tools/tree-sitter/tree-sitter")
+				if vim.fn.filereadable(known) == 1 then
+					cli = known
+				end
+			end
+			if cli == "" then
+				vim.notify(
+					"tree-sitter CLI not found; install it (e.g. ~/tools/tree-sitter) and run :TSUpdate",
+					vim.log.levels.WARN
+				)
+				return
+			end
+			vim.env.PATH = vim.fn.fnamemodify(cli, ":h") .. ":" .. vim.env.PATH
+			local job = require("nvim-treesitter").update()
+			if job then
+				job:wait(60000)
+			end
+		end,
 
 		config = function()
-			-- Core plugin setup (install_dir is optional; shown here per upstream example)
-			require("nvim-treesitter").setup({
-				install_dir = vim.fn.stdpath("data") .. "/site",
-			})
+			-- Core plugin setup (install_dir is optional; default is stdpath("data")/site)
+			require("nvim-treesitter").setup()
 
-			-- Install parsers (no-op if already installed). This runs async.
+			-- Install parsers for the languages you actually use.
+			-- This is async; it is a no-op if the parser is already installed.
 			require("nvim-treesitter").install({
-				"javascript",
-				"typescript",
-				"c",
-				"lua",
-				"rust",
-				"jsdoc",
-				"bash",
 				"go",
 				"zig",
-				"templ", -- custom parser defined below
-			})
-
-			-- Add/override custom language parser definition on TSUpdate
-			vim.api.nvim_create_autocmd("User", {
-				pattern = "TSUpdate",
-				callback = function()
-					require("nvim-treesitter.parsers").templ = {
-						tier = 2, -- or 1; 2 is a reasonable "community" tier
-						install_info = {
-							revision = "HEAD",
-							url = "https://github.com/vrischmann/tree-sitter-templ.git",
-							branch = "master",
-							files = { "src/parser.c", "src/scanner.c" },
-							-- optional in the new format:
-							-- queries = "queries/neovim",
-							-- location = "parser",
-							-- generate = true,
-						},
-					}
-				end,
+				"html",
+				"css",
+				"sql",
+				"templ", -- available in nvim-treesitter main branch
+				"bash",
+				"lua",
 			})
 
 			-- If your filetype is literally "templ", register it:

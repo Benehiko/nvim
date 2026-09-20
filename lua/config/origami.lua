@@ -4,9 +4,9 @@ origami.setup({
 	-- You can add custom options here, though defaults are fine for most
 })
 
--- Neovim fold settings (essential for Treesitter-based folding)
+-- Neovim fold settings (Treesitter folds via Neovim's built-in foldexpr)
 vim.opt.foldmethod = "expr"
-vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
+vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
 vim.opt.foldenable = true
 vim.opt.foldlevel = 99
 vim.opt.foldlevelstart = 99
