@@ -1,6 +1,7 @@
 return {
 	{
 		"nvim-treesitter/nvim-treesitter",
+		branch = "main",
 		lazy = false, -- main branch: plugin does not support lazy-loading
 		build = function()
 			-- Rebuild/update installed parsers after plugin updates.
