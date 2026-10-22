@@ -1,6 +1,7 @@
 return {
 	"nvim-neo-tree/neo-tree.nvim",
 	branch = "v3.x",
+	commit = "f3df514fff2bdd4318127c40470984137f87b62e",
 	dependencies = {
 		"nvim-lua/plenary.nvim",
 		"nvim-tree/nvim-web-devicons", -- not strictly required, but recommended
@@ -8,7 +9,7 @@ return {
 		-- {"3rd/image.nvim", opts = {}}, -- Optional image support in preview window: See `# Preview Mode` for more information
 		{
 			"s1n7ax/nvim-window-picker", -- for open_with_window_picker keymaps
-			version = "2.*",
+			commit = "6382540b2ae5de6c793d4aa2e3fe6dbb518505ec",
 			event = "VeryLazy",
 			keys = function(_, keys)
 				local pick_window = function()

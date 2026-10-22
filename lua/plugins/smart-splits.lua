@@ -1,5 +1,6 @@
 return {
 	"mrjones2014/smart-splits.nvim",
+	commit = "b9d563ea52c4926a4d91e5e795c68bb8f89f8ba0",
 	lazy = true,
 	event = "VeryLazy",
 	opts = {

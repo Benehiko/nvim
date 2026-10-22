@@ -2,6 +2,7 @@ return {
 	{
 		"nvim-treesitter/nvim-treesitter",
 		branch = "main",
+		commit = "29212d826054bb2948fa9d3a99eca9bf6a050eb2",
 		lazy = false, -- main branch: plugin does not support lazy-loading
 		build = function()
 			-- Rebuild/update installed parsers after plugin updates.
@@ -68,6 +69,7 @@ return {
 
 	{
 		"nvim-treesitter/nvim-treesitter-context",
+		commit = "8decd73460d26ef0a0befb745d022dd1fc2c38b8",
 		dependencies = { "nvim-treesitter/nvim-treesitter" },
 		lazy = false,
 		config = function()

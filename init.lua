@@ -21,7 +21,11 @@ end, { desc = "Smart close buffer" })
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
 	local lazyrepo = "https://github.com/folke/lazy.nvim.git"
-	local out = vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
+	local lazycommit = "306a05526ada86a7b30af95c5cc81ffba93fef97"
+	local out = vim.fn.system({ "git", "clone", "--filter=blob:none", lazyrepo, lazypath })
+	if vim.v.shell_error == 0 then
+		out = vim.fn.system({ "git", "-C", lazypath, "checkout", "--quiet", lazycommit })
+	end
 	if vim.v.shell_error ~= 0 then
 		vim.api.nvim_echo({
 			{ "Failed to clone lazy.nvim:\n", "ErrorMsg" },
@@ -64,7 +68,8 @@ local opts = { noremap = true, silent = true }
 
 -- Function to highlight yanked text
 local function clipboard_yank_highlight()
-	vim.highlight.on_yank({ higroup = "Visual", timeout = 150 })
+	local hl = vim.hl or vim.highlight
+	hl.on_yank({ higroup = "Visual", timeout = 150 })
 end
 
 -- Normal mode

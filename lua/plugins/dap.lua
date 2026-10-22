@@ -34,6 +34,7 @@ end
 return {
 	{
 		"mfussenegger/nvim-dap",
+		commit = "db321947bb289a2d4d76a32e76e4d2bd6103d7df",
 		lazy = false,
 		config = function()
 			local dap = require("dap")
@@ -47,11 +48,74 @@ return {
 			vim.keymap.set("n", "<leader>B", function()
 				dap.set_breakpoint(vim.fn.input("Breakpoint condition: "))
 			end, { desc = "Debug: Set Conditional Breakpoint" })
+
+			local goenv = require("config.goenv")
+			dap.adapters.delve = function(callback)
+				callback({
+					type = "server",
+					port = "${port}",
+					executable = {
+						command = goenv.bin("dlv"),
+						args = { "dap", "-l", "127.0.0.1:${port}" },
+					},
+				})
+			end
+
+			local function prompt_args()
+				return vim.split(vim.fn.input("args> "), " ")
+			end
+
+			dap.configurations.go = {
+				{
+					type = "delve",
+					name = "file args",
+					request = "launch",
+					program = "${file}",
+					outputMode = "remote",
+					args = prompt_args,
+				},
+				{
+					type = "delve",
+					name = "file",
+					request = "launch",
+					program = "${file}",
+					outputMode = "remote",
+					args = prompt_args,
+				},
+				{
+					type = "delve",
+					name = "Delve: Debug",
+					request = "launch",
+					program = "${workspaceFolder}",
+				},
+				{
+					type = "delve",
+					name = "Delve: Debug (Arguments)",
+					request = "launch",
+					program = "${workspaceFolder}",
+					args = prompt_args,
+				},
+				{
+					type = "delve",
+					name = "Delve: Debug test",
+					request = "launch",
+					mode = "test",
+					program = "${file}",
+				},
+				{
+					type = "delve",
+					name = "Delve: Debug test (go.mod)",
+					request = "launch",
+					mode = "test",
+					program = "./${relativeFileDirname}",
+				},
+			}
 		end,
 	},
 
 	{
 		"rcarriga/nvim-dap-ui",
+		commit = "cf91d5e2d07c72903d052f5207511bf7ecdb7122",
 		dependencies = { "mfussenegger/nvim-dap", "nvim-neotest/nvim-nio" },
 		config = function()
 			local dap = require("dap")
@@ -144,51 +208,6 @@ return {
 					dapui.eval(body.output) -- Sends stdout/stderr to Console
 				end
 			end
-		end,
-	},
-
-	{
-		"jay-babu/mason-nvim-dap.nvim",
-		dependencies = {
-			"williamboman/mason.nvim",
-			"mfussenegger/nvim-dap",
-			"neovim/nvim-lspconfig",
-		},
-		config = function()
-			require("mason-nvim-dap").setup({
-				ensure_installed = {
-					"delve",
-				},
-				automatic_installation = true,
-				handlers = {
-					function(config)
-						require("mason-nvim-dap").default_setup(config)
-					end,
-					delve = function(config)
-						table.insert(config.configurations, 1, {
-							args = function()
-								return vim.split(vim.fn.input("args> "), " ")
-							end,
-							type = "delve",
-							name = "file",
-							request = "launch",
-							program = "${file}",
-							outputMode = "remote",
-						})
-						table.insert(config.configurations, 1, {
-							args = function()
-								return vim.split(vim.fn.input("args> "), " ")
-							end,
-							type = "delve",
-							name = "file args",
-							request = "launch",
-							program = "${file}",
-							outputMode = "remote",
-						})
-						require("mason-nvim-dap").default_setup(config)
-					end,
-				},
-			})
 		end,
 	},
 }

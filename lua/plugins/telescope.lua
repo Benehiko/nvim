@@ -1,10 +1,12 @@
 return {
 	{
 		"nvim-telescope/telescope-fzf-native.nvim",
+		commit = "6fea601bd2b694c6f2ae08a6c6fab14930c60e2c",
 		build = "make",
 	},
 	{
 		"nvim-telescope/telescope.nvim",
+		commit = "40aedd8a68c78a656a10a8d62d80c54af59420fb",
 		dependencies = {
 			"nvim-lua/plenary.nvim",
 			"nvim-tree/nvim-web-devicons",

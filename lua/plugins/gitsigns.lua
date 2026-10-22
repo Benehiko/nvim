@@ -1,6 +1,7 @@
 return {
 	{
 		"lewis6991/gitsigns.nvim",
+		commit = "fd780920613e541cbdfac41bf711583ed49f9249",
 		config = function()
 			require("gitsigns").setup({
 				signs = {

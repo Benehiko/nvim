@@ -31,20 +31,21 @@ local lsp_servers = {
 	"sqls",
 }
 
+local goenv = require("config.goenv")
+
+local goenv_managed = { gopls = "gopls", sqls = "sqls" }
+
 mason_lspconfig.setup({
 	automatic_enable = false,
-	ensure_installed = lsp_servers,
+	ensure_installed = vim.tbl_filter(function(server)
+		return not goenv_managed[server]
+	end, lsp_servers),
 })
-
-local goenv_root = vim.env.GOENV_ROOT or (vim.env.HOME .. "/.goenv")
-local shim_path = goenv_root .. "/shims"
 
 local server_opts = {
 	gopls = {
-		cmd = { vim.fn.expand("~/.goenv/shims/gopls") },
-		cmd_env = {
-			PATH = shim_path .. ":" .. vim.env.PATH,
-		},
+		cmd = { goenv.bin("gopls") },
+		cmd_env = goenv.env,
 		settings = {
 			gopls = {
 				buildFlags = { "-tags=cgo" },
@@ -79,5 +80,16 @@ for _, server in ipairs(lsp_servers) do
 	end
 
 	vim.lsp.config(server, opts)
-	vim.lsp.enable(server)
+	if not goenv_managed[server] then
+		vim.lsp.enable(server)
+	end
 end
+
+goenv.ensure(vim.tbl_keys(goenv.tools), function(bins)
+	for server, binary in pairs(goenv_managed) do
+		if bins[binary] then
+			vim.lsp.config(server, { cmd = { bins[binary] } })
+		end
+		vim.lsp.enable(server)
+	end
+end)
